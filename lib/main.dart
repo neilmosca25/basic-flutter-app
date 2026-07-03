@@ -32,15 +32,13 @@ class MyApp extends StatelessWidget {
         colorScheme: .fromSeed(seedColor: Colors.deepPurple),
       ),
       home: Scaffold(
-        body: Center(
-          child: Row(
-            children: [
-              Tile('A', HitType.hit),
-              Tile('B', HitType.miss),
-              Tile('C', HitType.partial)
-            ],
-          ), // NEW
+        appBar: AppBar(
+          title: Align(
+            alignment: Alignment.center,
+            child: Text('Birdle'),
+          ),
         ),
+        body: Center(child: GamePage()),
       ),
     );
   }
@@ -76,3 +74,28 @@ class Tile extends StatelessWidget {
   }
 }
 
+class GamePage extends StatelessWidget {
+  GamePage({super.key});
+  // This object is part of the game.dart file.
+  // It manages wordle logic, and is outside the scope of this tutorial.
+  final Game _game = Game();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child:  Column(
+        spacing: 5.0,
+        children: [
+          for (final guess in _game.guesses)
+            Row(
+              spacing: 5.0,
+              children: [
+                for (final letter in guess) Tile(letter.char, letter.type)
+              ],
+            ),
+        ],
+      ),
+    );
+  }
+}
