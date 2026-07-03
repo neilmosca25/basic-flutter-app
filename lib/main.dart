@@ -15,6 +15,9 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Instantiate your `ArticleViewModel` to test its HTTP requests.
+    final viewModel = ArticleViewModel(ArticleModel());
+
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(title: const Text('Wikipedia Flutter')),
@@ -37,5 +40,32 @@ class ArticleModel {
     }
 
     return Summary.fromJson(jsonDecode(response.body) as Map<String, Object?>);
+  }
+}
+
+class ArticleViewModel extends ChangeNotifier {
+  final ArticleModel model;
+  Summary? summary;
+  Exception? error;
+  bool isLoading = false;
+
+  ArticleViewModel(this.model) {
+    fetchArticle();
+  }
+
+  Future<void> fetchArticle() async {
+    isLoading = true;
+    notifyListeners();
+    try {
+      summary = await model.getRandomArticleSummary();
+      print('Article loaded: ${summary!.titles.normalized}'); // Temporary
+      error = null; // Clear any previous errors.
+    } on HttpException catch (e) {
+      print('Error loading article: ${e.message}'); // Temporary
+      error = e;
+      summary = null;
+    }
+    isLoading = false;
+    notifyListeners();
   }
 }
