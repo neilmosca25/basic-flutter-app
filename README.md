@@ -1,2 +1,3 @@
-# basic-flutter-app
-Basic Flutter application for learning purposes
+# wikipedia_reader
+
+A new Flutter project.
